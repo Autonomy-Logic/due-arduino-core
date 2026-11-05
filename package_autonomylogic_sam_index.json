@@ -1,0 +1,46 @@
+{
+  "packages": [
+    {
+      "name": "autonomylogic",
+      "maintainer": "Autonomy Logic",
+      "websiteURL": "https://github.com/Autonomy-Logic/due-arduino-core",
+      "email": "support@autonomylogic.com",
+      "help": {
+        "online": "https://github.com/Autonomy-Logic/due-arduino-core"
+      },
+      "platforms": [
+        {
+          "name": "Autonomy Logic SAM (Arduino Due, C++14)",
+          "architecture": "sam",
+          "version": "0.1.0",
+          "category": "Contributed",
+          "help": {
+            "online": "https://github.com/Autonomy-Logic/due-arduino-core"
+          },
+          "url": "https://github.com/Autonomy-Logic/due-arduino-core/releases/download/v0.1.0/autonomylogic-sam-0.1.0.tar.bz2",
+          "archiveFileName": "autonomylogic-sam-0.1.0.tar.bz2",
+          "checksum": "SHA-256:abb26ee70b9c5a86ae676447dc1dfd46c1267ece78e854e1cf094cac65b43955",
+          "size": "16180149",
+          "boards": [
+            {
+              "name": "Arduino Due"
+            }
+          ],
+          "toolsDependencies": [
+            {
+              "packager": "arduino",
+              "name": "arm-none-eabi-gcc",
+              "version": "7-2017q4"
+            },
+            {
+              "packager": "arduino",
+              "name": "bossac",
+              "version": "1.6.1-arduino"
+            }
+          ]
+        }
+      ],
+      "tools": []
+    }
+  ]
+}
