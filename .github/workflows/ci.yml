@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches: [development, main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  INDEX: package_autonomylogic_sam_index.json
+
+jobs:
+  core:
+    name: Core - install from a locally built index and compile
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: arduino/setup-arduino-cli@v2
+      - name: Build the release artefacts from this working tree
+        run: |
+          set -euo pipefail
+          python3 tools/ci/build-release.py --version 9.9.9 --out dist
+          (cd dist && nohup python3 -m http.server 8099 >/dev/null 2>&1 &)
+          for i in $(seq 20); do curl -sf http://127.0.0.1:8099/ >/dev/null && break; sleep 0.5; done
+          python3 tools/ci/localize-index.py "dist/$INDEX" http://127.0.0.1:8099
+      - name: Install the core
+        run: |
+          set -euo pipefail
+          IDX="file://$PWD/dist/$INDEX"
+          arduino-cli core update-index --additional-urls "$IDX"
+          arduino-cli core install autonomylogic:sam@9.9.9 --additional-urls "$IDX"
+          arduino-cli board listall autonomylogic | grep -F autonomylogic:sam:arduino_due_x
+      - name: Compile the smoke sketch for both Due ports
+        run: |
+          set -euo pipefail
+          for fqbn in autonomylogic:sam:arduino_due_x autonomylogic:sam:arduino_due_x_dbg; do
+            arduino-cli compile --fqbn "$fqbn" --warnings default -v tools/ci/sketches/due_smoke | tee build.log
+            grep -q 'arm-none-eabi-gcc/7-2017q4' build.log || { echo "$fqbn did not build with gcc 7-2017q4"; exit 1; }
+            grep -q -- '-std=gnu++14' build.log || { echo "$fqbn did not build as C++14"; exit 1; }
+          done
