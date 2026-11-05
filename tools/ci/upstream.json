@@ -1,0 +1,11 @@
+{
+  "core": {
+    "url": "https://downloads.arduino.cc/cores/sam-1.6.12.tar.bz2",
+    "sha256": "1d56d0ceea12a920c4a5c12fff793499354ffba7e93d330786bd2d6f3a191c47",
+    "root": "sam"
+  },
+  "toolsDependencies": [
+    { "packager": "arduino", "name": "arm-none-eabi-gcc", "version": "7-2017q4" },
+    { "packager": "arduino", "name": "bossac", "version": "1.6.1-arduino" }
+  ]
+}

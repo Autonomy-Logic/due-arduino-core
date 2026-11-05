@@ -1,0 +1,97 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to build (no leading v), e.g. 0.1.0'
+        required: true
+
+permissions:
+  contents: write
+
+env:
+  INDEX: package_autonomylogic_sam_index.json
+
+jobs:
+  release:
+    name: Build, publish and update the index
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: arduino/setup-arduino-cli@v2
+
+      - name: Resolve the version
+        id: ver
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            V="${{ inputs.version }}"
+          else
+            V="${GITHUB_REF_NAME#v}"
+          fi
+          echo "version=$V" >> "$GITHUB_OUTPUT"
+          echo "building $V"
+
+      - name: Build the archive and the index
+        run: |
+          set -euo pipefail
+          python3 tools/ci/build-release.py --version "${{ steps.ver.outputs.version }}" --out dist
+          ls -la dist
+
+      # Install from the built artefacts before publishing them, so a broken
+      # archive fails the release instead of reaching users.
+      - name: Smoke-test the artefacts before publishing
+        run: |
+          set -euo pipefail
+          V="${{ steps.ver.outputs.version }}"
+          cp "dist/$INDEX" /tmp/index-local.json
+          (cd dist && nohup python3 -m http.server 8099 >/dev/null 2>&1 &)
+          for i in $(seq 20); do curl -sf http://127.0.0.1:8099/ >/dev/null && break; sleep 0.5; done
+          python3 tools/ci/localize-index.py /tmp/index-local.json http://127.0.0.1:8099
+          IDX="file:///tmp/index-local.json"
+          arduino-cli core update-index --additional-urls "$IDX"
+          arduino-cli core install "autonomylogic:sam@$V" --additional-urls "$IDX"
+          arduino-cli compile --fqbn autonomylogic:sam:arduino_due_x tools/ci/sketches/due_smoke
+          arduino-cli compile --fqbn autonomylogic:sam:arduino_due_x_dbg tools/ci/sketches/due_smoke
+          echo "artefacts install and compile"
+
+      - name: Publish the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          V="${{ steps.ver.outputs.version }}"
+          gh release view "v$V" >/dev/null 2>&1 \
+            && gh release upload "v$V" dist/*.tar.bz2 --clobber \
+            || gh release create "v$V" dist/*.tar.bz2 \
+                 --title "v$V" \
+                 --notes "autonomylogic:sam core $V for the Arduino Due: arduino:sam 1.6.12 built with arm-none-eabi-gcc 7-2017q4 as C++14."
+
+      # The index is what consumers read, so it is committed only after the
+      # assets it points at exist.
+      - name: Commit the regenerated index
+        run: |
+          set -euo pipefail
+          cp "dist/$INDEX" "$INDEX"
+          if git diff --quiet -- "$INDEX" && git ls-files --error-unmatch "$INDEX" >/dev/null 2>&1; then
+            echo "index unchanged"; exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$INDEX"
+          git commit -m "chore(release): point the index at v${{ steps.ver.outputs.version }}"
+          git push origin HEAD:main
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-artefacts
+          path: dist/
