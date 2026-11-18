@@ -1,0 +1,14 @@
+# osv-scanner suppression baseline for due-arduino-core: the VEX "not affected"
+# (and mitigated) decisions of the vulnerability report.
+#
+# Empty: the repository has no package manifest or lockfile today, so there is
+# nothing to suppress. Add an entry only for a triaged advisory, as
+#
+#   [[IgnoredVulns]]
+#   id = "GHSA-xxxx-xxxx-xxxx"
+#   ignoreUntil = "YYYY-MM-DDT00:00:00Z"
+#   reason = "VEX not_affected [<justification>]: <why> — see security report"
+#
+# Suppressions written by the automated monthly triage carry
+# "AI-TRIAGED [unreviewed]" in their reason until a human clears the marker while
+# reviewing the PR diff. An entry without that marker was triaged by a person.

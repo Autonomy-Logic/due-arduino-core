@@ -1,0 +1,255 @@
+{
+  "_note": "Hand-maintained inventory of what this platform ships and depends on but no package manager describes: the upstream Arduino SAM core (downloaded and repackaged by tools/ci/build-release.py) and the toolchain the board manager index points at. scripts/merge-components.mjs merges it into the cdxgen BOM and fails when a pinned entry no longer matches tools/ci/upstream.json. Licences were read from the upstream archives listed in each component's externalReferences.",
+  "root": {
+    "name": "due-arduino-core",
+    "group": "Autonomy-Logic",
+    "type": "framework",
+    "description": "autonomylogic:sam Arduino platform for the Arduino Due: arduino:sam built with arm-none-eabi-gcc 7-2017q4 as C++14",
+    "publisher": "Autonomy Logic",
+    "purlBase": "pkg:github/Autonomy-Logic/due-arduino-core",
+    "licenses": [{ "license": { "id": "GPL-3.0-only" } }]
+  },
+  "components": [
+    {
+      "bom-ref": "pkg:github/arduino/ArduinoCore-sam@1.6.12",
+      "type": "framework",
+      "name": "ArduinoCore-sam",
+      "group": "arduino",
+      "version": "1.6.12",
+      "publisher": "Arduino",
+      "description": "Arduino SAM Boards core (Arduino API, Arduino Due variant, Wire library). Repackaged into the platform archive; only platform.txt is changed.",
+      "purl": "pkg:github/arduino/ArduinoCore-sam@1.6.12",
+      "hashes": [{ "alg": "SHA-256", "content": "1d56d0ceea12a920c4a5c12fff793499354ffba7e93d330786bd2d6f3a191c47" }],
+      "licenses": [{ "license": { "id": "LGPL-2.1-or-later" } }],
+      "externalReferences": [
+        { "type": "distribution", "url": "https://downloads.arduino.cc/cores/sam-1.6.12.tar.bz2" },
+        { "type": "vcs", "url": "https://github.com/arduino/ArduinoCore-sam" }
+      ],
+      "properties": [
+        { "name": "autonomy:pin", "value": "core" },
+        { "name": "autonomy:delivery", "value": "redistributed in the platform archive" },
+        { "name": "autonomy:licence-source", "value": "per-file headers: cores/arduino/*, variants/arduino_due_x/*, libraries/Wire/src/*" }
+      ]
+    },
+    {
+      "bom-ref": "ArduinoCore-sam-1.6.12/usb-device-stack",
+      "type": "library",
+      "name": "ArduinoCore-sam USB device stack and HID library",
+      "group": "arduino",
+      "version": "1.6.12",
+      "publisher": "Arduino",
+      "description": "cores/arduino/USB (CDC, USBCore, USBDesc) and libraries/HID 1.0, bundled in ArduinoCore-sam 1.6.12.",
+      "licenses": [{ "license": { "id": "ISC" } }],
+      "externalReferences": [{ "type": "distribution", "url": "https://downloads.arduino.cc/cores/sam-1.6.12.tar.bz2" }],
+      "properties": [
+        { "name": "autonomy:delivery", "value": "redistributed in the platform archive" },
+        { "name": "autonomy:licence-source", "value": "per-file headers (Copyright Peter Barrett, ISC permission notice); PluggableUSB and USBAPI.h are LGPL-2.1-or-later and covered by ArduinoCore-sam" }
+      ]
+    },
+    {
+      "bom-ref": "ArduinoCore-sam-1.6.12/libraries/SPI",
+      "type": "library",
+      "name": "SPI",
+      "group": "arduino",
+      "version": "1.0",
+      "publisher": "Arduino",
+      "description": "SPI library for the Arduino Due, bundled in ArduinoCore-sam 1.6.12.",
+      "licenses": [{ "expression": "GPL-2.0-only OR LGPL-2.1-only" }],
+      "externalReferences": [{ "type": "distribution", "url": "https://downloads.arduino.cc/cores/sam-1.6.12.tar.bz2" }],
+      "properties": [
+        { "name": "autonomy:delivery", "value": "redistributed in the platform archive" },
+        { "name": "autonomy:licence-source", "value": "libraries/SPI/src/SPI.cpp header: GPL version 2 or LGPL version 2.1" }
+      ]
+    },
+    {
+      "bom-ref": "ArduinoCore-sam-1.6.12/system/libsam",
+      "type": "library",
+      "name": "libsam (Atmel SAM Software Package)",
+      "group": "atmel",
+      "version": "1.6.12",
+      "publisher": "Atmel Corporation",
+      "description": "SAM3X peripheral library, as sources and the prebuilt variants/arduino_due_x/libsam_sam3x8e_gcc_rel.a linked into every sketch. Bundled in ArduinoCore-sam 1.6.12; upstream carries no separate version.",
+      "licenses": [{ "license": { "name": "LicenseRef-Atmel-SAM-Software-Package" } }],
+      "externalReferences": [{ "type": "distribution", "url": "https://downloads.arduino.cc/cores/sam-1.6.12.tar.bz2" }],
+      "properties": [
+        { "name": "autonomy:delivery", "value": "redistributed in the platform archive" },
+        { "name": "autonomy:licence-source", "value": "system/libsam/source/*.c header 'SAM Software Package License' (BSD-style, one retention condition plus a no-endorsement clause)" }
+      ]
+    },
+    {
+      "bom-ref": "ArduinoCore-sam-1.6.12/system/CMSIS/Device/ATMEL",
+      "type": "library",
+      "name": "CMSIS device support for Atmel SAM3/SAM4",
+      "group": "atmel",
+      "version": "1.6.12",
+      "publisher": "Atmel Corporation",
+      "description": "CMSIS device headers and startup code for SAM3X8E, bundled in ArduinoCore-sam 1.6.12.",
+      "licenses": [{ "license": { "name": "LicenseRef-Atmel-SAM-Software-Package" } }],
+      "externalReferences": [{ "type": "distribution", "url": "https://downloads.arduino.cc/cores/sam-1.6.12.tar.bz2" }],
+      "properties": [
+        { "name": "autonomy:delivery", "value": "redistributed in the platform archive" },
+        { "name": "autonomy:licence-source", "value": "per-file headers 'SAM Software Package License'; a few files carry only an $asf_license$ placeholder" }
+      ]
+    },
+    {
+      "bom-ref": "ArduinoCore-sam-1.6.12/system/CMSIS/CMSIS",
+      "type": "library",
+      "name": "CMSIS",
+      "group": "arm",
+      "version": "2.10",
+      "publisher": "ARM Limited",
+      "description": "Cortex Microcontroller Software Interface Standard (core headers and DSP_Lib), bundled in ArduinoCore-sam 1.6.12.",
+      "licenses": [{ "license": { "name": "LicenseRef-ARM-CMSIS-EULA" } }],
+      "externalReferences": [{ "type": "distribution", "url": "https://downloads.arduino.cc/cores/sam-1.6.12.tar.bz2" }],
+      "properties": [
+        { "name": "autonomy:delivery", "value": "redistributed in the platform archive" },
+        { "name": "autonomy:licence-source", "value": "system/CMSIS/CMSIS/README.txt (Revision V2.10) and 'CMSIS END USER LICENCE AGREEMENT.pdf'" }
+      ]
+    },
+    {
+      "bom-ref": "ArduinoCore-sam-1.6.12/firmwares/atmega16u2",
+      "type": "firmware",
+      "name": "arduino-usbserial for ATmega16U2 (LUFA)",
+      "group": "arduino",
+      "version": "2013-02-05",
+      "publisher": "Arduino",
+      "description": "USB-serial firmware sources and prebuilt hex images for the Due's ATmega16U2, based on LUFA 2010 (Dean Camera). Shipped in the archive; this platform never builds or flashes it.",
+      "licenses": [{ "license": { "name": "LicenseRef-LUFA-2010" } }],
+      "externalReferences": [{ "type": "distribution", "url": "https://downloads.arduino.cc/cores/sam-1.6.12.tar.bz2" }],
+      "properties": [
+        { "name": "autonomy:delivery", "value": "redistributed in the platform archive, not used" },
+        { "name": "autonomy:licence-source", "value": "firmwares/atmega16u2/arduino-usbserial/Arduino-usbserial.c header (permissive, with a no-advertising clause)" }
+      ]
+    },
+    {
+      "bom-ref": "pkg:generic/arduino/arm-none-eabi-gcc@7-2017q4",
+      "type": "application",
+      "name": "arm-none-eabi-gcc",
+      "group": "arduino",
+      "version": "7-2017q4",
+      "publisher": "Arm",
+      "description": "GNU Arm Embedded Toolchain 7-2017-q4-major as published in Arduino's board manager index. Referenced by toolsDependencies, never redistributed by this repository.",
+      "purl": "pkg:generic/arduino/arm-none-eabi-gcc@7-2017q4",
+      "hashes": [{ "alg": "SHA-256", "content": "96a029e2ae130a1210eaa69e309ea40463028eab18ba19c1086e4c2dafe69a6a" }],
+      "licenses": [{ "expression": "GPL-3.0-or-later WITH GCC-exception-3.1" }],
+      "externalReferences": [
+        { "type": "distribution", "url": "https://downloads.arduino.cc/tools/gcc-arm-none-eabi-7-2017-q4-major-linux64.tar.bz2" },
+        { "type": "website", "url": "https://developer.arm.com/downloads/-/gnu-rm" }
+      ],
+      "properties": [
+        { "name": "autonomy:pin", "value": "tool:arm-none-eabi-gcc" },
+        { "name": "autonomy:delivery", "value": "installed by the board manager from Arduino's index" },
+        { "name": "autonomy:licence-source", "value": "share/doc/gcc-arm-none-eabi/license.txt and release.txt of the linux64 archive (hash above)" }
+      ]
+    },
+    {
+      "bom-ref": "gcc-arm-none-eabi-7-2017q4/gcc",
+      "type": "application",
+      "name": "gcc",
+      "group": "gnu",
+      "version": "7.2.1",
+      "publisher": "Free Software Foundation",
+      "description": "GCC from ARM/embedded-7-branch revision 255204, with libgcc and libstdc++ runtime libraries.",
+      "purl": "pkg:generic/gnu/gcc@7.2.1",
+      "licenses": [{ "expression": "GPL-3.0-or-later WITH GCC-exception-3.1" }],
+      "externalReferences": [{ "type": "vcs", "url": "svn://gcc.gnu.org/svn/gcc/branches/ARM/embedded-7-branch/" }],
+      "properties": [{ "name": "autonomy:delivery", "value": "part of arm-none-eabi-gcc 7-2017q4" }]
+    },
+    {
+      "bom-ref": "gcc-arm-none-eabi-7-2017q4/binutils",
+      "type": "application",
+      "name": "binutils",
+      "group": "gnu",
+      "version": "2.29.51.20171128",
+      "publisher": "Free Software Foundation",
+      "description": "Assembler, linker and object tools, binutils-gdb commit b23dc97fe237a1d9e850d7cbeee066183a00630b (2.29 mainline snapshot, dated from the commit gdb reports).",
+      "purl": "pkg:generic/gnu/binutils@2.29.51.20171128",
+      "licenses": [{ "license": { "id": "GPL-3.0-or-later" } }],
+      "externalReferences": [{ "type": "vcs", "url": "git://sourceware.org/git/binutils-gdb.git" }],
+      "properties": [{ "name": "autonomy:delivery", "value": "part of arm-none-eabi-gcc 7-2017q4" }]
+    },
+    {
+      "bom-ref": "gcc-arm-none-eabi-7-2017q4/newlib",
+      "type": "library",
+      "name": "newlib and newlib-nano",
+      "group": "sourceware",
+      "purl": "pkg:generic/sourceware/newlib@2.5.0",
+      "version": "2.5.0",
+      "publisher": "Red Hat",
+      "description": "C library and libgloss linked into every sketch built with this platform (_NEWLIB_VERSION 2.5.0), newlib-cygwin commit 76bd5cab331a873ac422fdcb7ba5fe79abea94f0.",
+      "licenses": [{ "license": { "name": "LicenseRef-newlib" } }],
+      "externalReferences": [{ "type": "vcs", "url": "git://sourceware.org/git/newlib-cygwin.git" }],
+      "properties": [
+        { "name": "autonomy:delivery", "value": "part of arm-none-eabi-gcc 7-2017q4; linked into the user's firmware" },
+        { "name": "autonomy:licence-source", "value": "license.txt section 'NEWLIB and LIBGLOSS': a collection of BSD-style and other permissive per-file licences" }
+      ]
+    },
+    {
+      "bom-ref": "gcc-arm-none-eabi-7-2017q4/gdb",
+      "type": "application",
+      "name": "gdb",
+      "group": "gnu",
+      "version": "8.0.50.20171128",
+      "publisher": "Free Software Foundation",
+      "description": "Debugger, binutils-gdb commit b23dc97fe237a1d9e850d7cbeee066183a00630b (8.0 mainline). Shipped in the toolchain; not used by compile or upload.",
+      "purl": "pkg:generic/gnu/gdb@8.0.50.20171128",
+      "licenses": [{ "license": { "id": "GPL-3.0-or-later" } }],
+      "externalReferences": [{ "type": "vcs", "url": "git://sourceware.org/git/binutils-gdb.git" }],
+      "properties": [{ "name": "autonomy:delivery", "value": "part of arm-none-eabi-gcc 7-2017q4" }]
+    },
+    {
+      "bom-ref": "pkg:github/arduino/BOSSA@1.6.1-arduino",
+      "type": "application",
+      "name": "bossac",
+      "group": "arduino",
+      "version": "1.6.1-arduino",
+      "publisher": "Arduino",
+      "description": "Flash programmer used to upload sketches to the Due. Referenced by toolsDependencies, never redistributed by this repository.",
+      "purl": "pkg:github/arduino/BOSSA@1.6.1-arduino",
+      "hashes": [{ "alg": "SHA-256", "content": "b78afc66c00ccfdd69a08bd3959c260a0c64ccce78a71d5a1135ae4437ff40db" }],
+      "licenses": [{ "license": { "id": "BSD-3-Clause" } }],
+      "externalReferences": [
+        { "type": "distribution", "url": "https://downloads.arduino.cc/bossac-1.6.1-arduino-x86_64-linux-gnu.tar.gz" },
+        { "type": "vcs", "url": "https://github.com/arduino/BOSSA/tree/1.6.1-arduino" }
+      ],
+      "properties": [
+        { "name": "autonomy:pin", "value": "tool:bossac" },
+        { "name": "autonomy:delivery", "value": "installed by the board manager from Arduino's index" },
+        { "name": "autonomy:licence-source", "value": "LICENSE at tag 1.6.1-arduino of arduino/BOSSA (Copyright ShumaTech)" }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "pkg:github/arduino/ArduinoCore-sam@1.6.12",
+      "dependsOn": [
+        "ArduinoCore-sam-1.6.12/usb-device-stack",
+        "ArduinoCore-sam-1.6.12/libraries/SPI",
+        "ArduinoCore-sam-1.6.12/system/libsam",
+        "ArduinoCore-sam-1.6.12/system/CMSIS/Device/ATMEL",
+        "ArduinoCore-sam-1.6.12/system/CMSIS/CMSIS",
+        "ArduinoCore-sam-1.6.12/firmwares/atmega16u2"
+      ]
+    },
+    {
+      "ref": "pkg:generic/arduino/arm-none-eabi-gcc@7-2017q4",
+      "dependsOn": [
+        "gcc-arm-none-eabi-7-2017q4/gcc",
+        "gcc-arm-none-eabi-7-2017q4/binutils",
+        "gcc-arm-none-eabi-7-2017q4/newlib",
+        "gcc-arm-none-eabi-7-2017q4/gdb"
+      ]
+    }
+  ],
+  "rootDependsOn": [
+    "pkg:github/arduino/ArduinoCore-sam@1.6.12",
+    "pkg:generic/arduino/arm-none-eabi-gcc@7-2017q4",
+    "pkg:github/arduino/BOSSA@1.6.1-arduino"
+  ],
+  "licenseRefs": {
+    "LicenseRef-Atmel-SAM-Software-Package": "SAM Software Package License. Copyright (c) Atmel Corporation. All rights reserved. Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following condition is met: - Redistributions of source code must retain the above copyright notice, this list of conditions and the disclaimer below. Atmel's name may not be used to endorse or promote products derived from this software without specific prior written permission. DISCLAIMER: THIS SOFTWARE IS PROVIDED BY ATMEL \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.",
+    "LicenseRef-ARM-CMSIS-EULA": "CMSIS END USER LICENCE AGREEMENT (ARM Limited, 2011). The full text is the PDF 'CMSIS END USER LICENCE AGREEMENT.pdf' in system/CMSIS/CMSIS/ of https://downloads.arduino.cc/cores/sam-1.6.12.tar.bz2.",
+    "LicenseRef-LUFA-2010": "Copyright 2010 Dean Camera (dean [at] fourwalledcubicle [dot] com). Permission to use, copy, modify, distribute, and sell this software and its documentation for any purpose is hereby granted without fee, provided that the above copyright notice appear in all copies and that both that the copyright notice and this permission notice and warranty disclaimer appear in supporting documentation, and that the name of the author not be used in advertising or publicity pertaining to distribution of the software without specific, written prior permission. The author disclaim all warranties with regard to this software, including all implied warranties of merchantability and fitness. In no event shall the author be liable for any special, indirect or consequential damages or any damages whatsoever resulting from loss of use, data or profits, whether in an action of contract, negligence or other tortious action, arising out of or in connection with the use or performance of this software.",
+    "LicenseRef-newlib": "newlib and libgloss: a collection of software from several sources, each file under its own copyright and licence (mostly BSD-style and other permissive notices from Red Hat, the Regents of the University of California and others). The full list is the 'NEWLIB and LIBGLOSS' section of share/doc/gcc-arm-none-eabi/license.txt in https://downloads.arduino.cc/tools/gcc-arm-none-eabi-7-2017-q4-major-linux64.tar.bz2 and COPYING.NEWLIB in the newlib sources."
+  }
+}
