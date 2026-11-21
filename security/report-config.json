@@ -1,0 +1,40 @@
+{
+  "product": "due-arduino-core",
+  "title": "Due Arduino Core",
+  "subtitle": "autonomylogic:sam Arduino platform for the Arduino Due (C++14)",
+  "version": "0.1.0",
+  "assessedAt": "2026-11",
+  "sbomBasename": "due-arduino-core",
+  "ecosystem": "none (upstream archives pinned in tools/ci/upstream.json)",
+  "securityContact": "Thiago Alves — thiago.alves@autonomylogic.com",
+  "advisorySource": "OSV via osv-scanner (lockfiles and requirements files only; this repository has none today)",
+  "_note_ids": "Every triage entry lists the advisory ids it accounts for. build-report.mjs cross-checks the live post-suppression scan against these: an advisory no entry claims is reported in section 4a as untriaged instead of being silently omitted while the narrative implies full coverage.",
+  "_note_counts": "advisories/counts describe the last FULL assessment (assessedAt) and are only rendered when the report is built without a live scan. With --osv-raw/--osv-delta the numbers come from that run.",
+  "advisories": { "total": 0, "critical": 0, "high": 0, "moderate": 0, "low": 0 },
+  "counts": {
+    "affected": { "n": 0, "sev": "none" },
+    "mitigated": { "n": 0, "sev": "none" },
+    "notAffected": { "n": 0, "pct": "—" }
+  },
+  "headline": "osv-scanner found <b>no package manifest or lockfile</b> to scan in this repository, so it reports no advisories. That is a statement about coverage, not a clean bill of health: the shipped platform is the upstream Arduino SAM core 1.6.12 plus Arduino's arm-none-eabi-gcc 7-2017q4 and bossac 1.6.1-arduino, none of which OSV indexes. They are listed in the SBOM and need a manual advisory review (see the scope note).",
+  "scope": "This repository builds the <code>autonomylogic:sam</code> Arduino platform: <code>tools/ci/build-release.py</code> downloads Arduino's SAM core 1.6.12 at a pinned SHA-256, patches <code>platform.txt</code> and publishes the archive and the board manager index. The toolchain (arm-none-eabi-gcc 7-2017q4, with newlib linked into every sketch) and bossac are installed by the board manager from Arduino's own index.",
+  "scopeNote": "The vulnerability scan covers package manifests and lockfiles only. The C/C++ code of the SAM core (Arduino API, USB stack, libsam, CMSIS), newlib and the toolchain binaries are inventoried in the SBOM from <code>security/components.json</code> but are not matched against any advisory database by this pipeline; OSV has no ecosystem for them. See security/README.md.",
+  "methodologyNote": "Advisory data is obtained from OSV with <code>osv-scanner</code>, honouring the VEX baseline in <code>osv-scanner.toml</code>. The upstream core and the toolchain are pinned by version and SHA-256 in <code>tools/ci/upstream.json</code> and in Arduino's index, so the inventory is exact, but advisories for them (NVD CVEs for GCC, binutils, newlib) must be reviewed by hand.",
+  "licenseNote": "The build scripts are GPL-3.0-only. The platform archive redistributes the upstream core under its per-file licences: LGPL-2.1-or-later (Arduino API, Wire), ISC (USB stack, HID), GPL-2.0-only OR LGPL-2.1-only (SPI), the Atmel SAM Software Package licence (libsam, CMSIS device files), the ARM CMSIS EULA and the LUFA 2010 licence. The toolchain is GPL-3.0-or-later WITH GCC-exception-3.1, so linking libgcc and libstdc++ into a sketch imposes no copyleft on it; newlib is under permissive per-file licences.",
+  "affected": [],
+  "mitigated": [],
+  "notAffected": [],
+  "criticalNote": "No critical advisory was reported by the scan, which covers package manifests only.",
+  "remediation": [
+    "<b>Manual review:</b> check NVD for advisories against GCC 7.2.1, binutils 2.29, newlib 2.5.0 and bossac 1.6.1 when the toolchain pin changes."
+  ],
+  "practices": [
+    { "practice": "Upstream core pinned by version and SHA-256 (tools/ci/upstream.json)", "status": "In place" },
+    { "practice": "Platform archive installed and compiled before every release is published", "status": "In place" },
+    { "practice": "Published index assets verified weekly (size and SHA-256)", "status": "In place" },
+    { "practice": "SBOM generated per release in CycloneDX and SPDX", "status": "In place" },
+    { "practice": "CI security gate on every pull request (new critical advisories)", "status": "In place" },
+    { "practice": "That gate configured as a required status check, so it blocks the merge", "status": "Not yet enforced" },
+    { "practice": "Advisory matching for the C/C++ core and the toolchain", "status": "Manual" }
+  ]
+}

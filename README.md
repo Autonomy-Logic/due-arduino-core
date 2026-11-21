@@ -47,6 +47,8 @@ Only `platform.txt`, patched by `tools/ci/build-release.py`:
 | `tools/ci/verify-index.py` | checks every asset of a published index |
 | `tools/ci/sketches/due_smoke/` | compile check for C++14 and linking |
 | `package_autonomylogic_sam_index.json` | board manager index, written by the release workflow |
+| `security/` | SBOM inventory, vulnerability report data and their workflows (see `security/README.md`) |
+| `scripts/` | SBOM and vulnerability scripts used by the `security-*` workflows |
 
 ## Build a release locally
 
