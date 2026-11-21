@@ -78,3 +78,4 @@ arduino-cli compile -b autonomylogic:sam:arduino_due_x tools/ci/sketches/due_smo
 
 Work lands on `development` through pull requests; releases are merged to
 `main` and tagged `v<version>`.
+
