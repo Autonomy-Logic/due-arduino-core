@@ -12,8 +12,9 @@ name: Security — release SBOM
 # The SBOM merges what cdxgen detects with security/components.json, the
 # inventory of the upstream SAM core and the toolchain (see security/README.md).
 #
-# workflow_dispatch exists for testing: any ref other than main writes the
-# security-archive-test branch, so real evidence is not touched.
+# workflow_dispatch exists for testing: from any ref other than main it writes
+# archive_branch (default security-archive-test); security-archive.sh refuses
+# security-archive outside main.
 
 on:
   push:
@@ -25,7 +26,7 @@ on:
   workflow_dispatch:
     inputs:
       archive_branch:
-        description: "Archive branch (must start with security-archive)"
+        description: "Archive branch for runs outside main (must start with security-archive-)"
         required: true
         default: security-archive-test
 
@@ -40,8 +41,9 @@ jobs:
   sbom:
     runs-on: ubuntu-latest
     env:
-      # Only main writes the real evidence branch; any other ref writes the test one.
-      ARCHIVE_BRANCH: ${{ inputs.archive_branch || (github.ref == 'refs/heads/main' && 'security-archive' || 'security-archive-test') }}
+      # main always writes security-archive (the input is ignored there); other refs
+      # write the input or security-archive-test.
+      ARCHIVE_BRANCH: ${{ github.ref == 'refs/heads/main' && 'security-archive' || inputs.archive_branch || 'security-archive-test' }}
     steps:
       - name: Checkout (release state)
         uses: actions/checkout@v4
